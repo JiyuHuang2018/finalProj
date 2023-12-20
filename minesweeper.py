@@ -26,23 +26,8 @@ class play_minesweeper():
         self.set_values()
 
         # Display the instructions
-        self.instructions
+        #self.instructions()
 
-
-    def get_all_unopened(self):
-        unopened = []
-        for r in range(self.n):
-            for col in range(self.n):
-                if(self.mine_values[r][col] ==' '):
-                    unopened.append(str(r+1)+"+" + str(col+1))
-        return unopened
-
-
-    def get_unopened_neighbor(self,r,col):
-        unopen_neighbor = []
-        if(r>=1):
-            if(self.mine_values[r-1][col] == ' '):
-                unopen_neighbor.append(str(r-1)+"+"+ str(col))
 
     def print_mine(self):
         for r in range(self.n):
@@ -240,113 +225,87 @@ class play_minesweeper():
     # The GAME LOOP
     # run game 
     def make_move(self,inp):
-        
-        # Standard input
-        print(len(inp))
-        if len(inp) == 2:
 
-            # Try block to handle errant input
-            try: 
+        # Standard input
+        print(inp)
+        if len(inp) == 2:
+            try:
                 val = list(map(int, inp))
             except ValueError:
-                self.clear
                 print("Wrong input!")
-                self.instructions
+                return
 
-        # Flag input
         elif len(inp) == 3:
             if inp[2] != 'F' and inp[2] != 'f':
-                self.clear
                 print("Wrong Input!")
-                self.instructions
+                return
 
-            # Try block to handle errant input  
             try:
                 val = list(map(int, inp[:2]))
             except ValueError:
-                self.clear
                 print("Wrong input!")
-                self.instructions
+                return
 
-            # Sanity checks 
             if val[0] > self.n or val[0] < 1 or val[1] > self.n or val[1] < 1:
-                self.clear
                 print("Wrong input!")
-                self.instructions
+                return
 
-            # Get row and column numbers
-            r = val[0]-1
-            col = val[1]-1 
+            r = val[0] - 1
+            c = val[1] - 1
 
-            # If cell already been flagged
-            if [r, col] in self.flags:
-                self.clear
+            if [r, c] in self.flags:
                 print("Flag already set")
+                return
 
-            # If cell already been displayed
-            if self.mine_values[r][col] != ' ':
-                self.clear
+            if self.mine_values[r][c] != ' ':
                 print("Value already known")
+                return
 
-            # Check the number for flags    
             if len(self.flags) < self.mines_no:
-                self.clear
                 print("Flag set")
-
-                # Adding flag to the list
-                self.flags.append([r, col])
-                
-                # Set the flag for display
-                self.mine_values[r][col] = 'F'
+                self.flags.append([r, c])
+                self.mine_values[r][c] = 'F'
+                return
             else:
-                self.clear
                 print("Flags finished")
+                return
 
-        else: 
-            self.clear
-            print("Wrong input!")   
-            self.instructions
-            
+        else:
+            print("Wrong input!")
+            return
 
-        # Sanity checks
         if val[0] > self.n or val[0] < 1 or val[1] > self.n or val[1] < 1:
-            self.clear
             print("Wrong Input!")
-            self.instructions
-            
-        # Get row and column number
-        r = val[0]-1
-        col = val[1]-1
+            return
 
-        # Unflag the cell if already flagged
-        if [r, col] in self.flags:
-            self.flags.remove([r, col])
+        r = val[0] - 1
+        c = val[1] - 1
 
-        # If landing on a mine --- GAME OVER    
-        if self.numbers[r][col] == -1:
-            self.mine_values[r][col] = 'M'
-            self.show_mines
-            self.print_mines_layout
+        if [r, c] in self.flags:
+            self.flags.remove([r, c])
+
+        if self.numbers[r][c] == -1:
+            self.mine_values[r][c] = 'M'
+            self.show_mines()
+            self.print_mines_layout()
             print("Landed on a mine. GAME OVER!!!!!")
-            self.over = True
+            over = True
+            return
 
-        # If landing on a cell with 0 mines in neighboring cells
-        elif self.numbers[r][col] == 0:
+        elif self.numbers[r][c] == 0:
             self.vis = []
-            self.mine_values[r][col] = '0'
-            self.neighbours(r, col)
+            self.mine_values[r][c] = '0'
+            self.neighbours(r, c)
 
-        # If selecting a cell with atleast 1 mine in neighboring cells  
-        else:   
-            self.mine_values[r][col] = self.numbers[r][col]
+        else:
+            self.mine_values[r][c] = self.numbers[r][c]
 
-        # Check for game completion 
-        if(self.check_over()):
+        if self.check_over():
             self.show_mines()
             self.print_mines_layout()
             print("Congratulations!!! YOU WIN")
             self.over = True
-        self.clear 
+            return
 
         
 if __name__ == "__main__":
