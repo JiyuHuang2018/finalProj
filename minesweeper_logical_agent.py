@@ -44,20 +44,32 @@ class minesweeper_logical_agent():
             print(game_value)
             if(game_value== ' '):
                 self.game.make_move("%s%sF" % (str(int(move_arr[1])+1),str(int(move_arr[2])+1)))
-                #print("move as %s%sF" % (move_arr[1],move_arr[2]))
         else:
             game_value = self.game.mine_values[int(move_arr[0])][int(move_arr[1])]
             print(game_value)
             if(game_value== ' '):
                 self.game.make_move("%s%s" % (str(int(move_arr[0])+1), str(int(move_arr[1])+1)))
-                #print("move as %s%s" % ((move_arr[0]),(move_arr[1]))
     
         
-    def get_combination_knowledge(self,unopen_list):
-        combos = list(combinations(unopen_list, len(unopen_list)))
-        formatted_combinations = ['_'.join([f'~{x}{y}' for x, y in combo]) for combo in combos]
-        print (formatted_combinations)
-        return formatted_combinations
+    def get_combination_knowledge(self,unopen_list,constraint):
+        indices = list(combinations(range(len(unopen_list)), constraint))
+        print(constraint)
+        # Initialize an empty list to store the output combinations
+        output_combinations = []
+
+        for index_combination in indices:
+            current_combination = []
+
+            for i, element in enumerate(unopen_list):
+                if i in index_combination:
+                    current_combination.append(f"~{element[0]}{element[1]}")
+                else:
+                    current_combination.append(f"{element[0]}{element[1]}")
+
+            output_combinations.append("_".join(current_combination))
+
+        return output_combinations
+
     
     def add_knowledge(self):
         # add knowledge about the block that adjacents next to unkown.
@@ -67,7 +79,7 @@ class minesweeper_logical_agent():
                     unopen, mines = self.get_unopen_and_mines(r,col)
                     if(unopen):
 ##                        if(int(self.game.mine_values[r][col]) - len(mines) != 0):
-                        knowledge = self.get_combination_knowledge(unopen)
+                        knowledge = self.get_combination_knowledge(unopen,self.game.mine_values[r][col])
                         print(knowledge)
                                     
 ##                            for x in knowledge:
