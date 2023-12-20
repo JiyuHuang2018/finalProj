@@ -44,13 +44,13 @@ class minesweeper_logical_agent():
             print(game_value)
             if(game_value== ' '):
                 self.game.make_move("%s%sF" % (str(int(move_arr[1])+1),str(int(move_arr[2])+1)))
-                print("move as %s%sF" % (move_arr[1],move_arr[2]))
+                #print("move as %s%sF" % (move_arr[1],move_arr[2]))
         else:
             game_value = self.game.mine_values[int(move_arr[0])][int(move_arr[1])]
             print(game_value)
             if(game_value== ' '):
-                self.game.make_move("%s%s" % (str(int(move_arr[0])+1), str(int(move_arr[1]+1)))
-                print("move as %s%s" % (str(move_arr[0]), str(move_arr[1])))
+                self.game.make_move("%s%s" % (str(int(move_arr[0])+1), str(int(move_arr[1])+1)))
+                #print("move as %s%s" % ((move_arr[0]),(move_arr[1]))
     
         
     def get_combination_knowledge(self,unopen_list):
@@ -66,20 +66,22 @@ class minesweeper_logical_agent():
                 if((not self.unopened(r,col)) and self.game.mine_values[r][col] != '0' and self.game.mine_values[r][col] != 'F'):
                     unopen, mines = self.get_unopen_and_mines(r,col)
                     if(unopen):
-                        if(int(self.game.mine_values[r][col]) - len(mines) != 0):
-                            knowledge = self.get_combination_knowledge(unopen)
-                            for x in knowledge:
-                                if x.count('~') == int(self.game.mine_values[r][col]):
-                                    print(x.count('~'))
-                                    for val in unopen:
-                                        s = "F %s %s" % (val[0], val[1])
-                                        if s not in self.moves:
-                                            self.moves.append("F %s %s" % (val[0], val[1]))
-                        else:
-                            for m in unopen:
-                                s = "%s %s" % (m[0], m[1])
-                                if s not in self.moves:
-                                    self.moves.append("%s %s" % (m[0], m[1]))
+##                        if(int(self.game.mine_values[r][col]) - len(mines) != 0):
+                        knowledge = self.get_combination_knowledge(unopen)
+                        print(knowledge)
+                                    
+##                            for x in knowledge:
+##                                if x.count('~') == int(self.game.mine_values[r][col]):
+##                                    print(x.count('~'))
+##                                    for val in unopen:
+##                                        s = "F %s %s" % (val[0], val[1])
+##                                        if s not in self.moves:
+##                                            self.moves.append("F %s %s" % (val[0], val[1]))
+##                        else:
+##                            for m in unopen:
+##                                s = "%s %s" % (m[0], m[1])
+##                                if s not in self.moves:
+##                                    self.moves.append("%s %s" % (m[0], m[1]))
                     
 
         
